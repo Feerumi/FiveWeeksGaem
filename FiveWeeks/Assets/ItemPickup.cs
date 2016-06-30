@@ -25,25 +25,29 @@ public class ItemPickup : MonoBehaviour {
 				nearbyItem.transform.position = pickedUpItemPosition.transform.position;
 				nearbyItem.transform.SetParent (pickedUpItemPosition.transform);
 			}
+		} else if(isItemPickedUp && Input.GetMouseButtonDown (0)) {
+			Debug.Log ("Shoot");
+			nearbyItem.GetComponent<Rigidbody> ().isKinematic = false;
+			nearbyItem.GetComponent<BoxCollider>().isTrigger = false;
+			nearbyItem.transform.SetParent (null);
+			nearbyItem.GetComponent<Rigidbody> ().AddForce (pickedUpItemPosition.transform.forward * 500);
+			nearbyItem.GetComponent<Rigidbody> ().AddForce (pickedUpItemPosition.transform.up * 250);
+			isItemPickedUp = false;
+			itemInRange = false;
+
 		}
 	
 			
 	}
 
 	void OnTriggerEnter(Collider coll) {
-		if (coll.tag == "Pickup" && !isItemPickedUp) {
-			Debug.Log ("Item in range");
+		if (coll.gameObject.tag == "Usable") {
 			itemInRange = true;
 			nearbyItem = coll.gameObject;
 		}
 	}
 
 	void OnTriggerExit(Collider coll) {
-		if (coll.tag == "Pickup" && !isItemPickedUp) {
-			Debug.Log ("No item in range");
-			nearbyItem = null;
-			itemInRange = false;
-		}
-
+		itemInRange = false;
 	}
 }

@@ -33,9 +33,9 @@ public class IlluminationWatcher : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		RaycastHit hit;	
-		Vector3 direction; 	// Raycast direction.
+		Vector3 direction; 		// Raycast direction.
 		float distance = 0; 	// Distance from the light origin to probe.
-		bool canLightProbe; // Can the light from origin reach the probe directly.
+		bool canLightProbe; 	// Can the light from origin reach the probe directly.
 
 		foreach (Light light in lights) {
 			foreach (GameObject probe in probes) {
@@ -45,9 +45,9 @@ public class IlluminationWatcher : MonoBehaviour {
 				// evaluate, is the light able to shine on player.
 				switch (light.type) {
 				case LightType.Directional:
-					// TODO Angle affects the luminosity.
+
 					canLightProbe = true;
-					distance = Mathf.Infinity;
+					distance = light.range;
 					break;
 
 				case LightType.Point:
@@ -62,16 +62,17 @@ public class IlluminationWatcher : MonoBehaviour {
 					canLightProbe = (light.spotAngle / 2 >= angleToProbe && distance <= light.range);
 					break;
 				}
+					
 
 				if (canLightProbe) {
 					direction = probe.transform.position - light.transform.position;
 					Debug.DrawRay (light.transform.position, direction);
-					// TODO Different raycast method for DirectionalLight.
-					// Has the ray collided with an object and is of intrest.
+					// Has the ray collided with an object, if so is it the probe.
 					if (Physics.Raycast (light.transform.position, direction, out hit, Mathf.Infinity)
 						&& hit.transform.tag.Equals (listener.tag)) {
-						// TODO calculate illumination. Distance should reduce illumination exponentially.
-						listener.onIlluminated (0);
+						// TODO Angle affects the luminosity for directional light.
+						float illuminance = (light.type == LightType.Directional) ? light.intensity : light.intensity * Mathf.Pow(1 - (distance / light.range),2);
+						listener.onIlluminated (illuminance);
 					}
 				}
 			}

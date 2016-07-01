@@ -66,6 +66,7 @@ public class IlluminationWatcher : MonoBehaviour {
 				if (canLightProbe) {
 					direction = probe.transform.position - light.transform.position;
 					Debug.DrawRay (light.transform.position, direction);
+					// TODO Different raycast method for DirectionalLight.
 					// Has the ray collided with an object and is of intrest.
 					if (Physics.Raycast (light.transform.position, direction, out hit, Mathf.Infinity)
 						&& hit.transform.tag.Equals (listener.tag)) {
@@ -86,5 +87,8 @@ public class IlluminationWatcher : MonoBehaviour {
 		 * classes shouldn't do that.
 		 */
 		public abstract void onIlluminated (float illuminance);
+
+		// TODO, hasMoved() to reduce overhead. Illumination doesn't change when the player doesn't move
+		// and Light is static.
 	}
 }

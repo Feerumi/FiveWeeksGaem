@@ -7,8 +7,7 @@ public class ItemPickup : MonoBehaviour {
 	GameObject nearbyItem;
 	bool itemInRange = false;
 	bool isItemPickedUp = false;
-	public float verticalThrowSpeed;
-	public float horizontalThrowSpeed;
+	public float mThrowForce;
 
 	// Use this for initialization
 	void Start () {
@@ -42,14 +41,9 @@ public class ItemPickup : MonoBehaviour {
             // Remove parent anchor from picked up item.
 			nearbyItem.transform.SetParent (null);
 
-            // Throw item onwards.
-			nearbyItem.GetComponent<Rigidbody> ().AddForce (pickedUpItemPosition.transform.forward * horizontalThrowSpeed);
-			nearbyItem.GetComponent<Rigidbody> ().AddForce (pickedUpItemPosition.transform.up * verticalThrowSpeed);
-
-            // set items status to false.
+			nearbyItem.GetComponent<Rigidbody> ().AddForce (pickedUpItemPosition.transform.forward * mThrowForce);
 			isItemPickedUp = false;
 			itemInRange = false;
-
 		}
 	
 			
@@ -62,10 +56,16 @@ public class ItemPickup : MonoBehaviour {
 			Debug.Log ("Item in range");
 			itemInRange = true;
 			nearbyItem = coll.gameObject;
+
+			// TODO non static layer referene.
+			nearbyItem.layer = LayerMask.NameToLayer("Highlight");
 		}
 	}
 
 	void OnTriggerExit(Collider coll) {
 		itemInRange = false;
+
+		// TODO non static layer referene.
+		nearbyItem.layer = LayerMask.NameToLayer("Default");
 	}
 }

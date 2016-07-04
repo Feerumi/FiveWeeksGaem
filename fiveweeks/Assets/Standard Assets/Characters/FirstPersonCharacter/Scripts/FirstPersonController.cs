@@ -58,6 +58,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         // Use this for initialization
         private void Start()
         {
+            Debug.Log(LayerMask.NameToLayer("Enemy"));
             m_CharacterController = GetComponent<CharacterController>();
             m_Camera = Camera.main;
             m_OriginalCameraPosition = m_Camera.transform.localPosition;
@@ -187,6 +188,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
             // move picked sound to index 0 so it's not picked next time
             m_FootstepSounds[n] = m_FootstepSounds[0];
             m_FootstepSounds[0] = m_AudioSource.clip;
+
+            Debug.Log ("Play sound");
 
             hearSettings.m_EnemiesWhoHeardMe = Physics.OverlapSphere(transform.position, hearSettings.m_HearingRange, hearSettings.m_EnemyLayer);
             foreach (Collider enemy in hearSettings.m_EnemiesWhoHeardMe) {

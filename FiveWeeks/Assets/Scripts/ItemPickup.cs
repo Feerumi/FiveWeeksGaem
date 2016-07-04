@@ -7,6 +7,8 @@ public class ItemPickup : MonoBehaviour {
 	GameObject nearbyItem;
 	bool itemInRange = false;
 	bool isItemPickedUp = false;
+	public float verticalThrowSpeed;
+	public float horizontalThrowSpeed;
 
 	// Use this for initialization
 	void Start () {
@@ -30,8 +32,8 @@ public class ItemPickup : MonoBehaviour {
 			nearbyItem.GetComponent<Rigidbody> ().isKinematic = false;
 			nearbyItem.GetComponent<BoxCollider>().isTrigger = false;
 			nearbyItem.transform.SetParent (null);
-			nearbyItem.GetComponent<Rigidbody> ().AddForce (pickedUpItemPosition.transform.forward * 500);
-			nearbyItem.GetComponent<Rigidbody> ().AddForce (pickedUpItemPosition.transform.up * 250);
+			nearbyItem.GetComponent<Rigidbody> ().AddForce (pickedUpItemPosition.transform.forward * horizontalThrowSpeed);
+			nearbyItem.GetComponent<Rigidbody> ().AddForce (pickedUpItemPosition.transform.up * verticalThrowSpeed);
 			isItemPickedUp = false;
 			itemInRange = false;
 
@@ -41,7 +43,8 @@ public class ItemPickup : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider coll) {
-		if (coll.gameObject.tag == "Usable") {
+		if (coll.gameObject.tag == "Pickup") {
+			Debug.Log ("Item in range");
 			itemInRange = true;
 			nearbyItem = coll.gameObject;
 		}

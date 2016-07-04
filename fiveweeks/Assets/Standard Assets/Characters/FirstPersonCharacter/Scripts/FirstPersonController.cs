@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
 using Random = UnityEngine.Random;
+using System.Collections;
 
 namespace UnityStandardAssets.Characters.FirstPerson
 {
@@ -10,6 +11,13 @@ namespace UnityStandardAssets.Characters.FirstPerson
     [RequireComponent(typeof (AudioSource))]
     public class FirstPersonController : MonoBehaviour
     {
+        [Serializable]
+        public class HearingSettings {
+            public Collider[] m_EnemiesWhoHeardMe;
+            public float m_HearingRange = 100f;
+            public LayerMask m_EnemyLayer = 8;   
+        }
+
         [SerializeField] private bool m_IsWalking;
         [SerializeField] private float m_WalkSpeed;
         [SerializeField] private float m_RunSpeed;
@@ -27,8 +35,13 @@ namespace UnityStandardAssets.Characters.FirstPerson
         [SerializeField] private AudioClip[] m_FootstepSounds;    // an array of footstep sounds that will be randomly selected from.
         [SerializeField] private AudioClip m_JumpSound;           // the sound played when character leaves the ground.
         [SerializeField] private AudioClip m_LandSound;           // the sound played when character touches back on ground.
+        [SerializeField] private HearingSettings hearSettings = new HearingSettings();
+
+
+
 
         private Camera m_Camera;
+
         private bool m_Jump;
         private float m_YRotation;
         private Vector2 m_Input;
@@ -174,6 +187,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
             // move picked sound to index 0 so it's not picked next time
             m_FootstepSounds[n] = m_FootstepSounds[0];
             m_FootstepSounds[0] = m_AudioSource.clip;
+
+            hearSettings.m_EnemiesWhoHeardMe = Physics.OverlapSphere(transform.position, hearSettings.m_HearingRange, hearSettings.m_EnemyLayer);
+            foreach (Collider enemy in hearSettings.m_EnemiesWhoHeardMe) {
+                Debug.Log ("Heaaard ya");
+            }
         }
 
 

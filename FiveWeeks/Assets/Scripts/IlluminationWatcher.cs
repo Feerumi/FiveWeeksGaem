@@ -33,10 +33,12 @@ public class IlluminationWatcher : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		RaycastHit hit;	
+
 		Vector3 direction; 	    // Raycast direction.
 		float distance = 0; 	// Distance from the light origin to probe.
 		bool canLightProbe;     // Can the light from origin reach the probe directly.
 		float multiplier = 0;		// The percentage of lights maximum illuminance that is shone on the probe.
+
 
 		if (listener != null) {
 			foreach (Light light in lights) {
@@ -52,6 +54,7 @@ public class IlluminationWatcher : MonoBehaviour {
 						distance = Mathf.Infinity;
 						multiplier = 1;
 						break;
+
 
 					case LightType.Point:
 						distance = Vector3.Distance (light.transform.position, probe.transform.position);

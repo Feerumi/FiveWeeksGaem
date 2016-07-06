@@ -63,9 +63,11 @@ public class ItemPickup : MonoBehaviour {
 	}
 
 	void OnTriggerExit(Collider coll) {
-		itemInRange = false;
+		if (coll.gameObject.tag == "Pickup") {
+			itemInRange = false;
 
-		// TODO non static layer referene.
-		nearbyItem.layer = LayerMask.NameToLayer("Default");
+			// TODO non static layer referene.
+			nearbyItem.layer = LayerMask.NameToLayer("Default");
+		}
 	}
 }

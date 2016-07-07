@@ -188,11 +188,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_FootstepSounds[n] = m_FootstepSounds[0];
             m_FootstepSounds[0] = m_AudioSource.clip;
 
-            Debug.Log ("Play sound");
-
             hearSettings.m_EnemiesWhoHeardMe = Physics.OverlapSphere(transform.position, hearSettings.m_HearingRange, hearSettings.m_EnemyLayer);
             foreach (Collider enemy in hearSettings.m_EnemiesWhoHeardMe) {
-                Debug.Log ("Heaaard ya");
+                
             }
         }
 

@@ -45,6 +45,10 @@ public class EnemyBehaviour : MonoBehaviour, VisibilityListener {
 	}
 
 	void VisibilityListener.onPlayerHide() {
+		returnToPatrol ();
+	}
+
+	void  returnToPatrol() {
 		EnemyPatrolState = (hasSeenPlayerBefore) ? PatrolState.PATROL_HIGH_ALERT : PatrolState.PATROL_MEDIUM_ALERT;
 		hasSeenPlayerBefore = true;	
 	}

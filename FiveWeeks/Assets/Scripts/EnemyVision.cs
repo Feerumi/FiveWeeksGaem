@@ -30,7 +30,9 @@ public class EnemyVision : EnemyBehaviour.Vision {
 	}
 
 	void OnTriggerStay(Collider other) {
+		
 		if (player != null && other.gameObject.tag == player.gameObject.tag) {
+			bool inSight = false;
 
 			if (playerVisibility.isVisible()) {
 				Vector3 direction = other.transform.position - this.transform.position;
@@ -38,17 +40,18 @@ public class EnemyVision : EnemyBehaviour.Vision {
 
 				if (angle <= fieldOfView / 2) {
 					RaycastHit hit;
-
 					// Raycast originates from the x,y,z coordinate of the enemy. Might need adjustment based on
 					// where this point resides within the enemy model.
 					if (Physics.Raycast(transform.position, direction.normalized, out hit, col.radius)) {
 						if (hit.collider.gameObject == player) {
 							playerLastSighting = player.gameObject.transform.position;
-							PlayerInSight = true;
+							inSight = true;
 						}
 					}
 				}
 			}
+
+			PlayerInSight = inSight;
 		}
 	}
 

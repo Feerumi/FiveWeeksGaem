@@ -12,7 +12,7 @@ public class PlayerVisibility : IlluminationWatcher.IlluminationListener {
 
 	// Use this for initialization
 	void Start () {
-		mIsVisible = false;
+		mIsVisible = true;
 	}
 	
 	// Update is called once per frame

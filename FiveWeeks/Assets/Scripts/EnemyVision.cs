@@ -30,8 +30,8 @@ public class EnemyVision : EnemyBehaviour.Vision {
 	}
 
 	void OnTriggerStay(Collider other) {
-		
-		if (player != null && other.gameObject.tag == player.gameObject.tag) {
+        
+		if (player != null && other.gameObject.tag == player.gameObject.tag && playerVisibility != null) {
 			bool inSight = false;
 
 			if (playerVisibility.isVisible()) {

@@ -2,6 +2,7 @@
 using System.Collections;
 
 
+[RequireComponent (typeof (NavMeshAgent))]
 public class EnemyBehaviour : MonoBehaviour, VisibilityListener {
 
 	// Reference to script that handles seeing the player.
@@ -10,6 +11,7 @@ public class EnemyBehaviour : MonoBehaviour, VisibilityListener {
 	public Patrol patrol { get; set; }
 	private PatrolState mPatrolState;
 	private bool hasSeenPlayerBefore;
+    public NavMeshAgent agent{ get; set; }
 
 	// Current state of awareness.
 	public PatrolState EnemyPatrolState {
@@ -31,6 +33,7 @@ public class EnemyBehaviour : MonoBehaviour, VisibilityListener {
 		if (vision != null)
 			vision.setVisibilityListener (this);
 		patrol = GetComponent<Patrol> ();
+        agent = GetComponent<NavMeshAgent> ();
 	}
 
 	// Use this for initialization
@@ -91,4 +94,8 @@ public class EnemyBehaviour : MonoBehaviour, VisibilityListener {
 	public abstract class Patrol : MonoBehaviour {
 		public abstract void onPatrolStateChanged(PatrolState newState);
 	}
+
+    public abstract class Hearing : MonoBehaviour {
+        
+    }
 }

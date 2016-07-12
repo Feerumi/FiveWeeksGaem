@@ -3,12 +3,15 @@ using System.Collections;
 
 
 [RequireComponent (typeof (NavMeshAgent))]
-public class EnemyBehaviour : MonoBehaviour, VisibilityListener {
+public class EnemyBehaviour : MonoBehaviour, VisibilityListener, SoundListener {
 
 	// Reference to script that handles seeing the player.
 	public Vision vision { get; set; }
-	// Reference to the script that handles navigatin the 
+	// Reference to the script that handles navigatin the map.
 	public Patrol patrol { get; set; }
+	// Reference to the script that handles hearing related functions.
+	public Hearing hearing { get; set; }
+
 	private PatrolState mPatrolState;
 	private bool hasSeenPlayerBefore;
     public NavMeshAgent agent{ get; set; }
@@ -32,6 +35,9 @@ public class EnemyBehaviour : MonoBehaviour, VisibilityListener {
 		vision = GetComponent<Vision> ();
 		if (vision != null)
 			vision.setVisibilityListener (this);
+		hearing = GetComponentInChildren<Hearing> ();
+		if (hearing != null)
+			hearing.setSoundListener (this);
 		patrol = GetComponent<Patrol> ();
         agent = GetComponent<NavMeshAgent> ();
 	}
@@ -43,6 +49,8 @@ public class EnemyBehaviour : MonoBehaviour, VisibilityListener {
 		hasSeenPlayerBefore = false;
 	}
 
+	#region VisibilityListener implementation
+
 	void VisibilityListener.onPlayerSeen() {
 		EnemyPatrolState = PatrolState.CHASE;
 	}
@@ -50,6 +58,23 @@ public class EnemyBehaviour : MonoBehaviour, VisibilityListener {
 	void VisibilityListener.onPlayerHide() {
 		returnToPatrol ();
 	}
+
+	#endregion
+
+	#region SoundListener implementation
+
+	public void onObjectAudible ()
+	{
+		// TODO React to a sound being heard.
+	}
+
+	public void onObjectInaudible ()
+	{
+		// TODO React to a sound becoming inaudiable.
+		// Doesn't necessarily need an implementation.
+	}
+
+	#endregion
 
 	void  returnToPatrol() {
 		EnemyPatrolState = (hasSeenPlayerBefore) ? PatrolState.PATROL_HIGH_ALERT : PatrolState.PATROL_MEDIUM_ALERT;
@@ -96,6 +121,30 @@ public class EnemyBehaviour : MonoBehaviour, VisibilityListener {
 	}
 
     public abstract class Hearing : MonoBehaviour {
-        
+		private SoundListener listener;
+		private bool mObjectHeard = false;
+
+		public bool ObjectHeard {
+			get {
+				return mObjectHeard;
+			}
+
+			set {
+				if (value != mObjectHeard) {
+					mObjectHeard = value;
+					if (listener != null) {
+						if (value) {
+							listener.onObjectAudible ();
+						} else {
+							listener.onObjectInaudible();
+						}
+					}
+				}
+			}
+		}
+
+		public void setSoundListener(SoundListener listener) {
+			this.listener = listener;
+		}
     }
 }

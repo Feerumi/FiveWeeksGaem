@@ -25,16 +25,6 @@ public class EnemyHearing : EnemyBehaviour.Hearing {
         mBehaviour = GetComponentInParent<EnemyBehaviour> ();
     }
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        
-	}
-
     public void SoundHeard (Vector3 pos, float loudness) {
         RaycastHit hit;
         Vector3 direction = pos - this.transform.position;
@@ -44,14 +34,17 @@ public class EnemyHearing : EnemyBehaviour.Hearing {
             if (hit.collider.gameObject == mPlayer) {
                 mDistanceToAudioSource = hit.distance;
             } else {
-                mDistanceToAudioSource = CalculatePathLength ();
+                mDistanceToAudioSource = CalculatePathLength (pos);
             }
         }
-
-        // TODO Check sound loudness.
-        if (mDistanceToAudioSource <= col.radius) {
-            
-        }
+			
+		// Is the sound within hearing range.
+		if (mDistanceToAudioSource <= col.radius) {
+			// TODO check sound loudness.
+			ObjectHeard = true;
+		} else {
+			ObjectHeard = false;
+		}
     }
 
     float CalculatePathLength(Vector3 targetPosition) {

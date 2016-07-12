@@ -3,13 +3,14 @@ using System.Collections;
 using System;
 using UnityEditor;
 
-
 [RequireComponent (typeof (SphereCollider))]
 public class EnemyHearing : EnemyBehaviour.Hearing {
 
     [Serializable]
     public class HearingSettings {
         public float m_HearingRange = 100f;
+		[Tooltip("Threshold at which objects that produce sound are being heard. Unit is dB. For context, 20dB equals to a whisper, 60dB normal talk and 80dB a vacuum cleaner.")]
+		public float m_HearingThreshold = 30;
     }
 
     [SerializeField] private HearingSettings hearSettings = new HearingSettings();
@@ -40,8 +41,15 @@ public class EnemyHearing : EnemyBehaviour.Hearing {
 			
 		// Is the sound within hearing range.
 		if (mDistanceToAudioSource <= col.radius) {
-			// TODO check sound loudness.
-			ObjectHeard = true;
+			// Intensity of the sound that the enemy hears.
+			double intensity = loudness / (4 * Math.PI * mDistanceToAudioSource * mDistanceToAudioSource);
+			// Percieved loudness of the sound in decibels. Might have to change this to give a more
+			// "in the ballpark" kind of result, since logarithmic are taxing.
+			double percievedLoudness = 10 * Math.Log10(intensity / Math.Pow(10, -12));
+			ObjectHeard =  (percievedLoudness >= hearSettings.m_HearingThreshold);
+			if (ObjectHeard)
+				mBehaviour.pointOfIntrest = pos;
+				
 		} else {
 			ObjectHeard = false;
 		}

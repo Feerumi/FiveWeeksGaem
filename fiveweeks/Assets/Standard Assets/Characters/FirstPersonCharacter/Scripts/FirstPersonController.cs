@@ -9,12 +9,12 @@ using System.Collections.Generic;
 
 namespace UnityStandardAssets.Characters.FirstPerson
 {
+	
     [RequireComponent(typeof (CharacterController))]
     [RequireComponent(typeof (AudioSource))]
+
     public class FirstPersonController : MonoBehaviour
     {
-        
-
         [SerializeField] private bool m_IsWalking;
         [SerializeField] private float m_WalkSpeed;
         [SerializeField] private float m_RunSpeed;
@@ -104,7 +104,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_AudioSource.clip = m_LandSound;
             m_AudioSource.Play();
             m_NextStep = m_StepCycle + .5f;
-
 			m_MakeSound.SoundPlayed (m_JumpVolume);
         }
 

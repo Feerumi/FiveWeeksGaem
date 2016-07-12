@@ -8,7 +8,7 @@ public class EnemyPatrol : EnemyBehaviour.Patrol {
 	[SerializeField] private Transform[] path;
 
 	// How close can the enemy get to a way point, before starting to move towards the next one.
-	[SerializeField][Range (0, Mathf.Infinity)] private float goalRadius;
+	[SerializeField][Range (0, 1000)] private float goalRadius;
 
 	// Index of the waypoint that is currently active.
 	private int mCurrentDestination = 0;
@@ -27,10 +27,10 @@ public class EnemyPatrol : EnemyBehaviour.Patrol {
 	void Update () {
 		switch(behaviour.EnemyPatrolState) {
 		case EnemyBehaviour.PatrolState.CHASE:
-            behaviour.agent.destination = behaviour.vision.playerLastSeen ();
+            behaviour.agent.destination = behaviour.pointOfIntrest;
 			break;
 
-		case EnemyBehaviour.PatrolState.SEARCH:
+		case EnemyBehaviour.PatrolState.INVESTIGATE:
 			break;
 
 		default:

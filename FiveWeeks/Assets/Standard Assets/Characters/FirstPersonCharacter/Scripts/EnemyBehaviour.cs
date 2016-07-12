@@ -11,6 +11,8 @@ public class EnemyBehaviour : MonoBehaviour, VisibilityListener, SoundListener {
 	public Patrol patrol { get; set; }
 	// Reference to the script that handles hearing related functions.
 	public Hearing hearing { get; set; }
+	// Last known point of intrest. Can be a source of sound, player sighting etc.
+	public Vector3 pointOfIntrest { get; set; }
 
 	private PatrolState mPatrolState;
 	private bool hasSeenPlayerBefore;
@@ -65,7 +67,14 @@ public class EnemyBehaviour : MonoBehaviour, VisibilityListener, SoundListener {
 
 	public void onObjectAudible ()
 	{
-		// TODO React to a sound being heard.
+		switch (EnemyPatrolState) {
+		case PatrolState.CHASE:
+			break;
+
+		default:
+			EnemyPatrolState = PatrolState.INVESTIGATE;
+			break;
+		}
 	}
 
 	public void onObjectInaudible ()
@@ -82,7 +91,7 @@ public class EnemyBehaviour : MonoBehaviour, VisibilityListener, SoundListener {
 	}
 
 	public enum PatrolState {
-		CHASE, PATROL_LOW_ALERT, PATROL_MEDIUM_ALERT, PATROL_HIGH_ALERT, SEARCH
+		CHASE, PATROL_LOW_ALERT, PATROL_MEDIUM_ALERT, PATROL_HIGH_ALERT, INVESTIGATE
 	};
 
 	public abstract class Vision : MonoBehaviour {

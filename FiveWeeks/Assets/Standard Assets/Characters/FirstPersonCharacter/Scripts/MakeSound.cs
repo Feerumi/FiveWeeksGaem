@@ -15,7 +15,7 @@ public class MakeSound : MonoBehaviour {
 	void Update () {
 	
 	}
-
+		
     public void SoundPlayed(float soundLoudness) {
         foreach (EnemyHearing enemy in mEnemies) {
             enemy.SoundHeard (gameObject.transform.position, soundLoudness);

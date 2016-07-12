@@ -4,6 +4,8 @@ using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
 using Random = UnityEngine.Random;
 using System.Collections;
+using UnityEditor;
+using System.Collections.Generic;
 
 namespace UnityStandardAssets.Characters.FirstPerson
 {
@@ -30,13 +32,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
         [SerializeField] private AudioClip[] m_FootstepSounds;    // an array of footstep sounds that will be randomly selected from.
         [SerializeField] private AudioClip m_JumpSound;           // the sound played when character leaves the ground.
         [SerializeField] private AudioClip m_LandSound;           // the sound played when character touches back on ground.
-
-
-
-
+		[SerializeField] private float m_WalkVolume = 10f;
+		[SerializeField] private float m_RunVolume = 20f;
+		[SerializeField] private float m_JumpVolume = 12f;
+		[SerializeField] private float m_LandingVolume = 15f;
 
         private Camera m_Camera;
-
         private bool m_Jump;
         private float m_YRotation;
         private Vector2 m_Input;
@@ -49,10 +50,14 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private float m_NextStep;
         private bool m_Jumping;
         private AudioSource m_AudioSource;
+		private MakeSound m_MakeSound;
+
+
 
         // Use this for initialization
         private void Start()
         {
+			
             m_CharacterController = GetComponent<CharacterController>();
             m_Camera = Camera.main;
             m_OriginalCameraPosition = m_Camera.transform.localPosition;
@@ -63,6 +68,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
 			m_MouseLook.Init(transform , m_Camera.transform);
+			m_MakeSound = this.GetComponent<MakeSound> ();
+
         }
 
 
@@ -97,6 +104,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_AudioSource.clip = m_LandSound;
             m_AudioSource.Play();
             m_NextStep = m_StepCycle + .5f;
+
+			m_MakeSound.SoundPlayed (m_JumpVolume);
         }
 
 
@@ -144,6 +153,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private void PlayJumpSound()
         {
+			m_MakeSound.SoundPlayed (m_JumpVolume);
             m_AudioSource.clip = m_JumpSound;
             m_AudioSource.Play();
 
@@ -183,6 +193,10 @@ namespace UnityStandardAssets.Characters.FirstPerson
             // move picked sound to index 0 so it's not picked next time
             m_FootstepSounds[n] = m_FootstepSounds[0];
             m_FootstepSounds[0] = m_AudioSource.clip;
+
+			m_MakeSound.SoundPlayed (m_WalkVolume);
+
+
              
         }
 

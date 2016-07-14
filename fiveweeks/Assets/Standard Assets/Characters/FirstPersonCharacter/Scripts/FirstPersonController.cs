@@ -38,7 +38,13 @@ namespace UnityStandardAssets.Characters.FirstPerson
 		[SerializeField] private float m_LandingVolume = 15f;
 
         private Camera m_Camera;
+		private Transform m_Transform;
         private bool m_Jump;
+		private Vector3 originalScale;
+		private float dist; //distance to ground
+		private bool m_Crouch;
+		private bool m_Crouching;
+		private bool m_Crouched;
         private float m_YRotation;
         private Vector2 m_Input;
         private Vector3 m_MoveDir = Vector3.zero;
@@ -58,10 +64,13 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private void Start()
         {
 			
+			m_Transform = GetComponent<Transform> ();
+			originalScale = m_Transform.localScale;
             m_CharacterController = GetComponent<CharacterController>();
             m_Camera = Camera.main;
             m_OriginalCameraPosition = m_Camera.transform.localPosition;
             m_FovKick.Setup(m_Camera);
+
             m_HeadBob.Setup(m_Camera, m_StepInterval);
             m_StepCycle = 0f;
             m_NextStep = m_StepCycle/2f;
@@ -78,10 +87,16 @@ namespace UnityStandardAssets.Characters.FirstPerson
         {
             RotateView();
             // the jump state needs to read here to make sure it is not missed
-            if (!m_Jump)
-            {
-                m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
-            }
+			if (!m_Jump) {
+				m_Jump = CrossPlatformInputManager.GetButtonDown ("Jump");
+			} 
+			if (Input.GetKeyDown (KeyCode.LeftControl)) {
+				m_Crouch = true;
+			} else if(Input.GetKeyUp(KeyCode.LeftControl)) {
+				m_Crouch = false;
+			}
+		
+				
 
             if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)
             {
@@ -111,6 +126,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private void FixedUpdate()
         {
             float speed;
+			float vScale = 1.0f;
             GetInput(out speed);
             // always move along the camera forward as it is the direction that it being aimed at
             Vector3 desiredMove = transform.forward*m_Input.y + transform.right*m_Input.x;
@@ -129,18 +145,39 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 m_MoveDir.y = -m_StickToGroundForce;
 
-                if (m_Jump)
-                {
-                    m_MoveDir.y = m_JumpSpeed;
-                    PlayJumpSound();
-                    m_Jump = false;
-                    m_Jumping = true;
-                }
+				if (m_Jump && !m_Crouch) {
+					m_MoveDir.y = m_JumpSpeed;
+					PlayJumpSound ();
+					m_Jump = false;
+					m_Jumping = true;
+				} 
+				 	
             }
             else
             {
                 m_MoveDir += Physics.gravity*m_GravityMultiplier*Time.fixedDeltaTime;
             }
+
+			if (m_Crouch) {
+				Debug.Log ("Crouch");
+				vScale = 0.5f;
+			}
+
+			float ultScale = m_Transform.localScale.y; // crouch/stand up smoothly 
+
+			Vector3 tmpScale = m_Transform.localScale;
+			Vector3 tmpPosition = m_Transform.position;
+
+			tmpScale.y = Mathf.Lerp(m_Transform.localScale.y, vScale, 5 * Time.deltaTime);
+			m_Transform.localScale = tmpScale;
+
+			tmpPosition.y += dist * (m_Transform.localScale.y - ultScale); // fix vertical position        
+			m_Transform.position = tmpPosition;
+
+			Debug.Log (vScale);
+
+
+
             m_CollisionFlags = m_CharacterController.Move(m_MoveDir*Time.fixedDeltaTime);
 
             ProgressStepCycle(speed);

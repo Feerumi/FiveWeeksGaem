@@ -159,7 +159,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
 
 			if (m_Crouch) {
-				Debug.Log ("Crouch");
 				vScale = 0.5f;
 			}
 
@@ -173,10 +172,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
 			tmpPosition.y += dist * (m_Transform.localScale.y - ultScale); // fix vertical position        
 			m_Transform.position = tmpPosition;
-
-			Debug.Log (vScale);
-
-
 
             m_CollisionFlags = m_CharacterController.Move(m_MoveDir*Time.fixedDeltaTime);
 

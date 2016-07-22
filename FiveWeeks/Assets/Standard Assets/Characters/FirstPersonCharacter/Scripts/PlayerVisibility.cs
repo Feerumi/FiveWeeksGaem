@@ -21,7 +21,6 @@ public class PlayerVisibility : IlluminationWatcher.IlluminationListener {
 		}
 
 		set {
-			Debug.Log ("Nönnönnnöö");
 			if (value != mIsVisible) {
 				mIsVisible = value;
 				elapsed = 0;
@@ -48,7 +47,6 @@ public class PlayerVisibility : IlluminationWatcher.IlluminationListener {
 	// Update is called once per frame
 	void Update () {
 		IsVisible = mIlluminationTotal >= visibilityTreshold;
-		Debug.Log ("IsVisible: " + IsVisible + "     IT: " + mIlluminationTotal);
 		mIlluminationTotal = 0;
 
 		switch (action) {

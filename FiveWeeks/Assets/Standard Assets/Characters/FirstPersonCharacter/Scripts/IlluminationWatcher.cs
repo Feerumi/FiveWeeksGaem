@@ -42,42 +42,44 @@ public class IlluminationWatcher : MonoBehaviour {
 
 		if (listener != null) {
 			foreach (Light light in lights) {
-				foreach (GameObject probe in probes) {
-					canLightProbe = false;
+				if (light.enabled) {
+					foreach (GameObject probe in probes) {
+						canLightProbe = false;
 
-					// Determine which kind of light is in question and
-					// evaluate, is the light able to shine on player.
-					switch (light.type) {
-					case LightType.Directional:
+						// Determine which kind of light is in question and
+						// evaluate, is the light able to shine on player.
+						switch (light.type) {
+						case LightType.Directional:
 					// TODO Angle affects the luminosity.
-						canLightProbe = true;
-						distance = Mathf.Infinity;
-						multiplier = 1;
-						break;
+							canLightProbe = true;
+							distance = Mathf.Infinity;
+							multiplier = 1;
+							break;
 
 
-					case LightType.Point:
-						distance = Vector3.Distance (light.transform.position, probe.transform.position);
-						canLightProbe = distance <= light.range;
-						multiplier = light.intensity * Mathf.Pow (1 - (distance / light.range), 2);
-						break;
+						case LightType.Point:
+							distance = Vector3.Distance (light.transform.position, probe.transform.position);
+							canLightProbe = distance <= light.range;
+							multiplier = light.intensity * Mathf.Pow (1 - (distance / light.range), 2);
+							break;
 
-					case LightType.Spot:
-						distance = Vector3.Distance (light.transform.position, probe.transform.position);
-						float angleToProbe = Vector3.Angle ((-light.transform.forward),
-							                    light.transform.position - probe.transform.position);
-						canLightProbe = (light.spotAngle / 2 >= angleToProbe && distance <= light.range);
-						multiplier = light.intensity * Mathf.Pow (1 - (distance / light.range), 2);
-						break;
-					}
+						case LightType.Spot:
+							distance = Vector3.Distance (light.transform.position, probe.transform.position);
+							float angleToProbe = Vector3.Angle ((-light.transform.forward),
+								                    light.transform.position - probe.transform.position);
+							canLightProbe = (light.spotAngle / 2 >= angleToProbe && distance <= light.range);
+							multiplier = light.intensity * Mathf.Pow (1 - (distance / light.range), 2);
+							break;
+						}
 
-					if (canLightProbe) {
-						direction = probe.transform.position - light.transform.position;
-						Debug.DrawRay (light.transform.position, direction);
-						// Has the ray collided with an object and is of intrest.
-						if (Physics.Raycast (light.transform.position, direction, out hit, Mathf.Infinity)
-						   && hit.transform.tag.Equals (listener.tag)) {
-							listener.onIlluminated (light.intensity * multiplier);
+						if (canLightProbe) {
+							direction = probe.transform.position - light.transform.position;
+							Debug.DrawRay (light.transform.position, direction);
+							// Has the ray collided with an object and is of intrest.
+							if (Physics.Raycast (light.transform.position, direction, out hit, Mathf.Infinity)
+							   && hit.transform.tag.Equals (listener.tag)) {
+								listener.onIlluminated (light.intensity * multiplier);
+							}
 						}
 					}
 				}

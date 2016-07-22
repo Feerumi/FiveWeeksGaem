@@ -5,7 +5,8 @@ using System.Collections;
 public class EnemyPatrol : EnemyBehaviour.Patrol {
 
 	// Series of points which the enemy will follow.
-	[SerializeField] private Transform[] path;
+	private Transform[] mPath;
+	[SerializeField] private GameObject path;
 
 	// How close can the enemy get to a way point, before starting to move towards the next one.
 	[SerializeField][Range (0, 1000)] private float goalRadius;
@@ -16,6 +17,7 @@ public class EnemyPatrol : EnemyBehaviour.Patrol {
 
 	void Awake() {
 		behaviour = GetComponent<EnemyBehaviour> ();
+		mPath = path.GetComponentsInChildren<Transform> ();
 	}
 
 	void Start() {
@@ -45,9 +47,9 @@ public class EnemyPatrol : EnemyBehaviour.Patrol {
 	}
 
 	protected void nextPatrolPoint() {
-		if (path.Length != 0) {
-			mCurrentDestination = (mCurrentDestination + 1) % path.Length;
-            behaviour.agent.destination = path [mCurrentDestination].position;
+		if (mPath.Length != 0) {
+			mCurrentDestination = (mCurrentDestination + 1) % mPath.Length;
+            behaviour.agent.destination = mPath [mCurrentDestination].position;
 		}
 	}
 }

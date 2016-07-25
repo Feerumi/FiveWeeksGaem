@@ -9,7 +9,7 @@ public class PlayerVisibility : IlluminationWatcher.IlluminationListener {
 	}
 
 	private bool mIsVisible = false;
-	private float min = 0.15f;
+	private float min = 0.1f;
 	private float max = 1f;
 	private float duration = 0.35f;
 	private float elapsed = 0f;

@@ -58,7 +58,15 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private AudioSource m_AudioSource;
 		private MakeSound m_MakeSound;
 
+		public Transform _Pivot;
+		public float speed = 100f;
+		public float maxAngle = 20f;
+		float curAngle = 0f;
 
+
+		private void Awake() {
+			if (_Pivot == null && transform.parent != null) _Pivot = transform.parent;
+		}
 
         // Use this for initialization
         private void Start()
@@ -87,16 +95,25 @@ namespace UnityStandardAssets.Characters.FirstPerson
         {
             RotateView();
             // the jump state needs to read here to make sure it is not missed
-			if (!m_Jump) {
+			if (!m_Crouch &&  !m_Jump) {
 				m_Jump = CrossPlatformInputManager.GetButtonDown ("Jump");
 			} 
 			if (Input.GetKeyDown (KeyCode.LeftControl)) {
 				m_Crouch = true;
 			} else if(Input.GetKeyUp(KeyCode.LeftControl)) {
 				m_Crouch = false;
+			} 
+			/*
+			if (Input.GetKey(KeyCode.Q)) {
+				DoLeanLeft ();
+			} else if (Input.GetKey(KeyCode.E)) {
+				DoLeanRight ();
+			} else {
+				curAngle = Mathf.MoveTowardsAngle(curAngle, 0f, speed * Time.deltaTime);
 			}
+			*/
 		
-				
+			//_Pivot.transform.localRotation = Quaternion.AngleAxis(curAngle, Vector3.forward);	
 
             if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)
             {
@@ -112,6 +129,18 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
         }
+		/*
+		private void DoLeanLeft() {
+			Debug.Log ("Just do it");
+			curAngle = Mathf.MoveTowardsAngle(curAngle, maxAngle, speed * Time.deltaTime);
+		}
+
+		private void DoLeanRight() {
+			curAngle = Mathf.MoveTowardsAngle(curAngle, -maxAngle, speed * Time.deltaTime);
+		}
+		*/
+
+		
 
 
         private void PlayLandingSound()

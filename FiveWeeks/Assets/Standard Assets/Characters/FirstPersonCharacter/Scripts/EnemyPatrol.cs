@@ -28,6 +28,7 @@ public class EnemyPatrol : EnemyBehaviour.Patrol {
 	
 	// Update is called once per frame
 	void Update () {
+
 		switch(behaviour.EnemyPatrolState) {
 		case EnemyBehaviour.PatrolState.CHASE:
             behaviour.agent.destination = behaviour.pointOfIntrest;

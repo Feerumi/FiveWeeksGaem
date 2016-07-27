@@ -10,7 +10,7 @@ public class EnemyHearing : EnemyBehaviour.Hearing {
     public class HearingSettings {
         public float m_HearingRange = 100f;
 		[Tooltip("Threshold at which objects that produce sound are being heard. Unit is dB. For context, 20dB equals to a whisper, 60dB normal talk and 80dB a vacuum cleaner.")]
-		public float m_HearingThreshold = 30;
+		public float m_HearingThreshold = 60;
     }
 
     [SerializeField] private HearingSettings hearSettings = new HearingSettings();
@@ -47,9 +47,10 @@ public class EnemyHearing : EnemyBehaviour.Hearing {
 			// "in the ballpark" kind of result, since logarithmic are taxing.
 			double percievedLoudness = 10 * Math.Log10(intensity / Math.Pow(10, -12));
 			ObjectHeard =  (percievedLoudness >= hearSettings.m_HearingThreshold);
+			Debug.Log (percievedLoudness);
 			if (ObjectHeard)
 				mBehaviour.pointOfIntrest = pos;
-				
+			
 		} else {
 			ObjectHeard = false;
 		}

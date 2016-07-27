@@ -44,6 +44,7 @@ public class EnemyVision : EnemyBehaviour.Vision {
 					if (Physics.Raycast(transform.position, direction.normalized, out hit, col.radius)) {
 						if (hit.collider.gameObject == player) {
 							playerLastSighting = player.gameObject.transform.position;
+							behaviour.pointOfIntrest = playerLastSighting;
 							inSight = true;
 						}
 					}

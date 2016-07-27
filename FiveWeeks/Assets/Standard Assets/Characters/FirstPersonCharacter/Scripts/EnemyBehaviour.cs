@@ -16,6 +16,8 @@ public class EnemyBehaviour : MonoBehaviour, VisibilityListener, SoundListener {
 
 	private PatrolState mPatrolState;
 	private bool hasSeenPlayerBefore;
+	private Animator animator;
+
     public NavMeshAgent agent{ get; set; }
 
 	// Current state of awareness.
@@ -34,6 +36,7 @@ public class EnemyBehaviour : MonoBehaviour, VisibilityListener, SoundListener {
 	}
 
 	void Awake() {
+		animator = this.GetComponentInChildren<Animator>();
 		vision = GetComponentInChildren<Vision> ();
 		if (vision != null)
 			vision.setVisibilityListener (this);
@@ -55,6 +58,8 @@ public class EnemyBehaviour : MonoBehaviour, VisibilityListener, SoundListener {
 
 	void VisibilityListener.onPlayerSeen() {
 		EnemyPatrolState = PatrolState.CHASE;
+		animator.SetTrigger ("Noticed");
+
 	}
 
 	void VisibilityListener.onPlayerHide() {

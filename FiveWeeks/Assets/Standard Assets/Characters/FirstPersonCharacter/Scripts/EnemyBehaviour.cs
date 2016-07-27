@@ -34,7 +34,7 @@ public class EnemyBehaviour : MonoBehaviour, VisibilityListener, SoundListener {
 	}
 
 	void Awake() {
-		vision = GetComponent<Vision> ();
+		vision = GetComponentInChildren<Vision> ();
 		if (vision != null)
 			vision.setVisibilityListener (this);
 		hearing = GetComponentInChildren<Hearing> ();
@@ -58,7 +58,7 @@ public class EnemyBehaviour : MonoBehaviour, VisibilityListener, SoundListener {
 	}
 
 	void VisibilityListener.onPlayerHide() {
-		returnToPatrol ();
+
 	}
 
 	#endregion
@@ -67,20 +67,7 @@ public class EnemyBehaviour : MonoBehaviour, VisibilityListener, SoundListener {
 
 	public void onObjectAudible ()
 	{
-		switch (EnemyPatrolState) {
-		case PatrolState.CHASE:
-			break;
-
-		default:
-			EnemyPatrolState = PatrolState.INVESTIGATE;
-			break;
-		}
-	}
-
-	public void onObjectInaudible ()
-	{
-		// TODO React to a sound becoming inaudiable.
-		// Doesn't necessarily need an implementation.
+		EnemyPatrolState = PatrolState.CHASE;
 	}
 
 	#endregion
@@ -144,9 +131,7 @@ public class EnemyBehaviour : MonoBehaviour, VisibilityListener, SoundListener {
 					if (listener != null) {
 						if (value) {
 							listener.onObjectAudible ();
-						} else {
-							listener.onObjectInaudible();
-						}
+						} 
 					}
 				}
 			}

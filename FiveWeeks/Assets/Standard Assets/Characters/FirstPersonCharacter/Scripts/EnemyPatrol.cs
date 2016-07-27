@@ -17,7 +17,8 @@ public class EnemyPatrol : EnemyBehaviour.Patrol {
 
 	void Awake() {
 		behaviour = GetComponent<EnemyBehaviour> ();
-		mPath = path.GetComponentsInChildren<Transform> ();
+		if (path != null)
+			mPath = path.GetComponentsInChildren<Transform> ();
 	}
 
 	void Start() {
@@ -47,7 +48,7 @@ public class EnemyPatrol : EnemyBehaviour.Patrol {
 	}
 
 	protected void nextPatrolPoint() {
-		if (mPath.Length != 0) {
+		if (mPath != null && mPath.Length != 0) {
 			mCurrentDestination = (mCurrentDestination + 1) % mPath.Length;
             behaviour.agent.destination = mPath [mCurrentDestination].position;
 		}

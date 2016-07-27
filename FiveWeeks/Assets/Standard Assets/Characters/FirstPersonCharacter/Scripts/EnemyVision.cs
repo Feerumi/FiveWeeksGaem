@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent (typeof (EnemyBehaviour))]
 [RequireComponent (typeof (SphereCollider))]
 public class EnemyVision : EnemyBehaviour.Vision {
 
@@ -13,7 +12,7 @@ public class EnemyVision : EnemyBehaviour.Vision {
 	private SphereCollider col;
 
 	void Awake() {
-		behaviour = GetComponent<EnemyBehaviour> ();
+		behaviour = GetComponentInParent<EnemyBehaviour> ();
 		player = GameObject.FindGameObjectWithTag ("Player");
 		if  (player != null) {
 			playerVisibility = player.GetComponent<PlayerVisibility> ();

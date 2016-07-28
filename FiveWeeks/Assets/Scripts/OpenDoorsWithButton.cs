@@ -10,11 +10,29 @@ public class OpenDoorsWithButton : MonoBehaviour {
 	private float timeToOpen;
 	private float translateAmount;
 	private float translateChunk;
+	private bool button1Pressed = false;
+	private bool button2Pressed = false;
 
 	// Use this for initialization
 	void Start () {
-		StartCoroutine ("Open");
+		
 	}
+
+	public void ButtonPressed(GameObject button) {
+		Debug.Log ("Something pressed");
+		if (button.name == "button1") {
+			Debug.Log ("Button1 pressed");
+			button1Pressed = true;
+		} else if (button.name == "button2") {
+			Debug.Log ("Button2 pressed");
+			button2Pressed = true;
+		}
+
+		if (button1Pressed && button2Pressed) {
+			StartCoroutine ("Open");
+		}
+	}
+		
 
 	IEnumerator Close() {
 

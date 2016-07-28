@@ -47,7 +47,6 @@ public class EnemyHearing : EnemyBehaviour.Hearing {
 			// "in the ballpark" kind of result, since logarithmic are taxing.
 			double percievedLoudness = 10 * Math.Log10(intensity / Math.Pow(10, -12));
 			ObjectHeard =  (percievedLoudness >= hearSettings.m_HearingThreshold);
-			Debug.Log (percievedLoudness);
 			if (ObjectHeard)
 				mBehaviour.pointOfIntrest = pos;
 			
